@@ -1,0 +1,28 @@
+export const Colors = {
+  primary: "#1B2A4A",
+  primaryLight: "#243660",
+  primaryDark: "#111C33",
+  accent: "#F5A623",
+  accentLight: "#FFB94D",
+  accentDark: "#C8851A",
+  background: "#FFFFFF",
+  surface: "#FFFFFF",
+  surfaceGray: "#F5F5F5",
+  surfaceSecondary: "#F0F2F8",
+  border: "#E2E6EF",
+  borderLight: "#ECEEF5",
+  text: "#1B2A4A",
+  textSecondary: "#5A6884",
+  textTertiary: "#9BA8BF",
+  textOnPrimary: "#FFFFFF",
+  textOnAccent: "#1B2A4A",
+  success: "#22C55E",
+  successLight: "rgba(34,197,94,0.12)",
+  warning: "#F5A623",
+  error: "#EF4444",
+  verified: "#F5A623",
+  cardShadow: "rgba(27, 42, 74, 0.08)",
+  overlay: "rgba(27, 42, 74, 0.55)",
+};
+
+export default Colors;
