@@ -1,0 +1,111 @@
+Here's a comprehensive Replit prompt that covers all your requirements:
+
+REPLIT PROMPT — LeaseLink Full App (Final Build)
+
+You are rebuilding and extending the LeaseLink web app — a UC Berkeley student housing platform. This is a single-file React app (or multi-file if needed) using localStorage for all state, Stripe.js for payment, and no backend. Below are the full feature specs, bug fixes, and integration details.
+
+TECH STACK
+React (with hooks)
+Tailwind CSS
+Stripe.js (loaded via CDN: https://js.stripe.com/v3/)
+Stripe Publishable Key: pk_test_51TMZjcIZ10P8Ps21ZOC7ULYvRamMfObR0Er9Im5zD0UWeMeC6RCd0o1u9J7NhlNbmYOTMcEa6Qt8daYN3OxHVl9p0068keOWXE
+All data persisted in localStorage
+No real backend — simulate all flows client-side
+
+BUG FIXES (MUST FIX)
+1. Edit Existing Listing
+On the Landlord Dashboard, each listing card must have an "Edit Listing" button
+Clicking it opens a pre-filled modal/form with all existing listing fields populated
+On save, it updates the listing in localStorage and re-renders the dashboard
+Do NOT create a new listing — update the existing one by ID
+2. Create Listing Button Visibility
+The "+ Create New Listing" button on the Landlord Dashboard must always be clearly visible
+Place it prominently at the top of the dashboard page, styled as a solid colored primary button (not ghost, not outline-only)
+Make it large enough to be unmissable (min padding: px-6 py-3, bold label)
+3. Sign Out Button
+Add a "Sign Out" button in the top-right of the navbar for any logged-in user (both tenant and landlord)
+On click: clear currentUser from localStorage, redirect to homepage/login
+Button must be always visible when a user is logged in — not hidden behind a dropdown unless the dropdown is always accessible
+
+FEATURE SPECS
+PAGE 3 — LISTING DETAIL PAGE
+Show full listing info: title, address, price, bedrooms, bathrooms, description, photos
+Show an "Express Interest" button prominently
+Clicking it opens a modal with an application form:
+Full Name (text input)
+Personal Email (text input)
+Berkeley Email (text input, must end in @berkeley.edu — validate on submit)
+Short Message (textarea)
+On valid submit → close modal, show toast/confirmation: "Application Sent! The landlord will be in touch."
+Save application to localStorage under the listing's ID
+
+PAGE 4 — LANDLORD SIGNUP / VERIFICATION PAGE
+Route: /landlord-signup or similar
+Form fields:
+Full Name
+Company Name (optional)
+Property Address to List
+Email Address
+Phone Number
+Dropdown: "I am a" → [Independent Landlord, Property Management Company]
+Upload button labeled "Upload Proof of Ownership" — visually functional (file picker opens), no actual upload needed
+Checkbox: "I confirm I am the legal owner or authorized manager of this property"
+Submit button: "Get Verified — $49"
+On clicking submit:
+Validate all required fields
+Open a Stripe Payment Modal (built with Stripe.js Elements):
+Show card number, expiry, CVC fields using Stripe's CardElement or individual elements
+Show amount: $49.00 Verification Fee
+"Pay $49" button — on click, call stripe.createPaymentMethod(...) — no real charge, just simulate success
+On any response (success or test mode): close modal, proceed to next step
+Save landlord to localStorage with status: "pending"
+Redirect to "Verification Pending" page:
+Yellow badge: "Under Review — 24–48 hours"
+Message: "We've received your verification request and payment. Our team will review your documents and approve your account within 24–48 hours."
+Hidden admin button (small, bottom-right corner, low opacity, labeled "Admin: Approve"): when clicked, sets landlord status to "verified" in localStorage and refreshes to show green "LeaseLink Verified ✓" badge
+
+PAGE 5 — LANDLORD DASHBOARD (post-verification)
+Only accessible if landlord is logged in (currentUser.role === 'landlord')
+Top of page: show "LeaseLink Verified ✓" green badge if status is "verified", yellow "Verification Pending" badge if "pending"
+"+ Create New Listing" button — large, visible, primary color — opens a create listing modal with fields:
+Title, Address, Monthly Rent ($), Bedrooms, Bathrooms, Description, Available From (date)
+Save → adds to localStorage listings array with unique ID and landlordId
+Listings section: shows all listings belonging to the current landlord
+Each listing card has: listing info summary, "Edit Listing" button (opens pre-filled edit modal), "Delete" button
+Applications Table: shows all applications submitted for this landlord's listings
+Columns: Applicant Name, Berkeley Email, Listing Title, Message, Status, Actions
+Each row has "Accept" and "Reject" buttons
+Accepted rows: turn green, show a "Schedule Tour" button that opens https://calendly.com in a new tab
+Rejected rows: turn red/gray, show "Rejected" label
+Statuses persist in localStorage
+
+NAVBAR REQUIREMENTS
+Show logo "LeaseLink" on the left
+If no user logged in: show "For Landlords" link + "Login" + "Sign Up" buttons
+If tenant logged in: show "Browse Listings", "My Applications", and "Sign Out" button (right side)
+If landlord logged in: show "My Dashboard", and "Sign Out" button (right side)
+Sign Out clears localStorage user session and returns to homepage
+
+STRIPE INTEGRATION NOTES
+Load Stripe.js via <script src="https://js.stripe.com/v3/"></script> in index.html
+Initialize with: const stripe = Stripe('pk_test_51TMZjcIZ10P8Ps21ZOC7ULYvRamMfObR0Er9Im5zD0UWeMeC6RCd0o1u9J7NhlNbmYOTMcEa6Qt8daYN3OxHVl9p0068keOWXE')
+Use Stripe Elements to render card input fields in the payment modal
+Call stripe.createPaymentMethod({ type: 'card', card: cardElement }) on pay button click
+Do not make any server-side API calls — no charges will be processed; this is demo/test mode only
+On any result from createPaymentMethod (success or error): treat as success for demo purposes and proceed with verification flow
+
+DATA MODEL (localStorage keys)
+leaselink_users       → array of { id, name, email, role, status }
+leaselink_listings    → array of { id, landlordId, title, address, rent, beds, baths, description, availableFrom }
+leaselink_applications → array of { id, listingId, landlordId, name, email, berkeleyEmail, message, status }
+leaselink_current_user → { id, name, email, role, status }
+
+DESIGN
+Clean, modern, professional
+Color palette: deep navy (#1a2744) + white + gold/yellow accents (#f5c842) for Berkeley feel
+Use Tailwind classes throughout
+Badges: yellow pill for "Pending", green pill for "Verified"
+Responsive layout — works on desktop and mobile
+
+Build the complete app. Make sure all three bug fixes are resolved, all five pages work end-to-end, Stripe Elements renders properly in the verification modal, and sign out fully clears the session.
+
